@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "../antigravity/.vscode"
+		},
+		{
+			"path": "../antigravity/__pycache__"
+		},
+		{
+			"path": "../antigravity/js"
+		},
+		{
+			"path": "../antigravity/python_env"
+		},
+		{
+			"path": "../antigravity/sample_media"
+		}
+	]
+}

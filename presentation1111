@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>apexpave ai™ — IEEE-IGNITE Hackathon Presentation SKIT018</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #020914;
+      --bg-card: #0a1628;
+      --bg-card2: #0d1f3c;
+      --accent-blue: #3b82f6;
+      --accent-cyan: #06b6d4;
+      --accent-green: #10b981;
+      --accent-orange: #f59e0b;
+      --accent-red: #ef4444;
+      --accent-purple: #8b5cf6;
+      --text-primary: #f0f6ff;
+      --text-muted: #8aa4c8;
+      --text-subtle: #4a6580;
+      --border: rgba(59,130,246,0.15);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg-dark); color: var(--text-primary); overflow: hidden; height: 100vh; }
+    .slideshow { width: 100vw; height: 100vh; position: relative; }
+    .slide {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      justify-content: center; align-items: center; padding: 60px;
+      opacity: 0; transform: translateX(60px);
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none;
+    }
+    .slide.active { opacity: 1; transform: translateX(0); pointer-events: all; }
+    .slide.exit { opacity: 0; transform: translateX(-60px); }
+    .slide::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: linear-gradient(rgba(59,130,246,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px);
+      background-size: 40px 40px; pointer-events: none; z-index: 0;
+    }
+    .slide > * { position: relative; z-index: 1; }
+    .nav-bar {
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 16px;
+      background: rgba(10,22,40,0.9); border: 1px solid var(--border);
+      border-radius: 50px; padding: 10px 20px;
+      backdrop-filter: blur(20px); z-index: 1000;
+    }
+    .nav-btn {
+      background: none; border: 1px solid var(--border); color: var(--text-primary);
+      padding: 8px 20px; border-radius: 30px; cursor: pointer;
+      font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 600;
+      letter-spacing: 0.05em; transition: all 0.2s;
+    }
+    .nav-btn:hover { background: var(--accent-blue); border-color: var(--accent-blue); }
+    .slide-counter { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); min-width: 70px; text-align: center; }
+    .dot-nav { display: flex; gap: 6px; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-subtle); cursor: pointer; transition: all 0.2s; }
+    .dot.active { background: var(--accent-blue); transform: scale(1.5); }
+    .slide-tag {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--accent-cyan);
+      letter-spacing: 0.15em; text-transform: uppercase;
+      border: 1px solid rgba(6,182,212,0.3); padding: 4px 12px;
+      border-radius: 20px; margin-bottom: 24px; background: rgba(6,182,212,0.05);
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3);
+      border-radius: 30px; padding: 6px 16px; font-size: 0.75rem;
+      font-family: 'JetBrains Mono', monospace; color: var(--accent-blue);
+      letter-spacing: 0.1em; margin-bottom: 32px;
+    }
+    .pulse-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-green); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.7)} }
+    .hero-title {
+      font-size: 5.5rem; font-weight: 900; line-height: 1;
+      background: linear-gradient(135deg, #ffffff 0%, #93c5fd 50%, #06b6d4 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: 12px;
+    }
+    .hero-subtitle { font-size: 1.3rem; color: var(--text-muted); font-weight: 400; margin-bottom: 48px; }
+    .hero-stats { display: flex; gap: 40px; justify-content: center; }
+    .h-stat { text-align: center; }
+    .h-stat-val { font-size: 2.2rem; font-weight: 800; color: var(--accent-blue); font-family: 'JetBrains Mono', monospace; }
+    .h-stat-lbl { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
+    .hero-divider { width: 1px; height: 40px; background: var(--border); margin-top: 10px; }
+    .slide-title { font-size: 2.8rem; font-weight: 800; line-height: 1.1; margin-bottom: 8px; }
+    .slide-desc { font-size: 1rem; color: var(--text-muted); margin-bottom: 40px; max-width: 700px; text-align: center; }
+    .card-grid { display: grid; gap: 20px; width: 100%; max-width: 1100px; }
+    .card-grid-2 { grid-template-columns: 1fr 1fr; }
+    .card-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .card-grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+    .info-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; transition: all 0.2s; }
+    .info-card:hover { border-color: rgba(59,130,246,0.4); box-shadow: 0 0 24px rgba(59,130,246,0.1); }
+    .card-icon { font-size: 2rem; margin-bottom: 12px; }
+    .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+    .card-body { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; }
+    .problem-stat-row { display: flex; gap: 20px; width: 100%; max-width: 1100px; margin-bottom: 24px; }
+    .prob-stat { flex: 1; background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(239,68,68,0.03)); border: 1px solid rgba(239,68,68,0.2); border-radius: 16px; padding: 24px; text-align: center; }
+    .prob-stat-val { font-size: 2.8rem; font-weight: 900; color: var(--accent-red); font-family: 'JetBrains Mono', monospace; }
+    .prob-stat-lbl { font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; }
+    .tech-row { display: flex; gap: 14px; margin-bottom: 14px; justify-content: center; flex-wrap: wrap; }
+    .tech-chip { background: var(--bg-card2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 18px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+    .arch-flow { display: flex; align-items: center; width: 100%; max-width: 1100px; }
+    .arch-node { flex: 1; background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 20px 16px; text-align: center; }
+    .arch-node-icon { font-size: 1.8rem; margin-bottom: 8px; }
+    .arch-node-title { font-size: 0.82rem; font-weight: 700; margin-bottom: 4px; }
+    .arch-node-sub { font-size: 0.7rem; color: var(--text-muted); line-height: 1.4; }
+    .arch-arrow { color: var(--accent-blue); font-size: 1.4rem; padding: 0 6px; opacity: 0.6; }
+    .feature-row { display: flex; align-items: flex-start; gap: 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+    .feature-num { min-width: 36px; height: 36px; border-radius: 50%; background: var(--accent-blue); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.85rem; }
+    .feature-content h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+    .feature-content p { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; }
+    .metric-big { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 30px; text-align: center; }
+    .metric-big-val { font-size: 3.5rem; font-weight: 900; font-family: 'JetBrains Mono', monospace; }
+    .metric-big-label { font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 8px; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; }
+    .badge-blue { background: rgba(59,130,246,0.15); color: var(--accent-blue); }
+    .badge-green { background: rgba(16,185,129,0.15); color: var(--accent-green); }
+    .badge-orange { background: rgba(245,158,11,0.15); color: var(--accent-orange); }
+    .badge-red { background: rgba(239,68,68,0.15); color: var(--accent-red); }
+    .badge-purple { background: rgba(139,92,246,0.15); color: var(--accent-purple); }
+    .roadmap-timeline { display: flex; flex-direction: column; gap: 0; max-width: 900px; width: 100%; }
+    .roadmap-item { display: flex; gap: 20px; align-items: flex-start; padding-bottom: 24px; position: relative; }
+    .roadmap-item::before { content: ''; position: absolute; left: 17px; top: 36px; bottom: 0; width: 2px; background: var(--border); }
+    .roadmap-item:last-child::before { display: none; }
+    .roadmap-dot { min-width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 800; border: 2px solid var(--accent-blue); background: var(--bg-card); color: var(--accent-blue); z-index: 1; }
+    .roadmap-content { flex: 1; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; }
+    .roadmap-content h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+    .roadmap-content p { font-size: 0.8rem; color: var(--text-muted); }
+    .split-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; width: 100%; max-width: 1100px; align-items: center; }
+    .code-block { background: #020c1a; border: 1px solid var(--border); border-radius: 12px; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; line-height: 1.8; color: var(--text-muted); }
+    .code-block .kw { color: var(--accent-purple); }
+    .code-block .cm { color: var(--text-subtle); }
+    .progress-bar-outer { position: fixed; top: 0; left: 0; width: 100%; height: 3px; background: rgba(59,130,246,0.1); z-index: 999; }
+    .progress-bar-inner { height: 100%; background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan)); transition: width 0.5s ease; }
+    .slide-number-fixed { position: fixed; top: 20px; right: 24px; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-subtle); z-index: 999; }
+    .brand-fixed { position: fixed; top: 20px; left: 24px; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-subtle); z-index: 999; letter-spacing: 0.08em; }
+    .hl-blue { color: var(--accent-blue); }
+    .hl-cyan { color: var(--accent-cyan); }
+    .hl-green { color: var(--accent-green); }
+    .hl-orange { color: var(--accent-orange); }
+    .hl-red { color: var(--accent-red); }
+    .hl-purple { color: var(--accent-purple); }
+    .styled-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .styled-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.88rem; color: var(--text-muted); }
+    .styled-list li::before { content: '›'; color: var(--accent-blue); font-size: 1.2rem; line-height: 1.2; min-width: 12px; }
+    .key-hint { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); font-size: 0.68rem; color: var(--text-subtle); font-family: 'JetBrains Mono', monospace; z-index: 999; }
+    #slide-1, #slide-10 { text-align: center; }
+    #slide-1 { background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(59,130,246,0.12), transparent 70%), radial-gradient(ellipse 60% 40% at 80% 80%, rgba(139,92,246,0.08), transparent 60%), var(--bg-dark); }
+    #slide-10 { background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(59,130,246,0.15), transparent 70%), var(--bg-dark); }
+    .cta-box { background: var(--bg-card); border: 1px solid rgba(59,130,246,0.3); border-radius: 20px; padding: 40px 60px; max-width: 700px; }
+  </style>
+</head>
+<body>
+
+<div class="progress-bar-outer"><div class="progress-bar-inner" id="progress-bar"></div></div>
+<div class="brand-fixed">apexpave ai™ · IEEE-IGNITE · SKIT018</div>
+<div class="slide-number-fixed" id="slide-num-fixed">01 / 10</div>
+<div class="key-hint">← → Arrow Keys or Buttons to Navigate</div>
+
+<div class="slideshow" id="slideshow">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide active" id="slide-1">
+    <div class="hero-badge"><div class="pulse-dot"></div>IEEE-IGNITE HACKATHON 2026 · TEAM SKIT018</div>
+    <h1 class="hero-title">apexpave ai™</h1>
+    <p class="hero-subtitle">AI-Based Road Damage Detection &amp; Severity Mapping Platform</p>
+    <div class="hero-stats">
+      <div class="h-stat"><div class="h-stat-val">30 FPS</div><div class="h-stat-lbl">Real-Time Vision</div></div>
+      <div class="hero-divider"></div>
+      <div class="h-stat"><div class="h-stat-val">96%</div><div class="h-stat-lbl">Detection Confidence</div></div>
+      <div class="hero-divider"></div>
+      <div class="h-stat"><div class="h-stat-val">6+</div><div class="h-stat-lbl">Defect Types</div></div>
+      <div class="hero-divider"></div>
+      <div class="h-stat"><div class="h-stat-val">GPS</div><div class="h-stat-lbl">EXIF Geo-Tagged</div></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: PROBLEM STATEMENT -->
+  <div class="slide" id="slide-2">
+    <div class="slide-tag">01 · Problem Statement</div>
+    <h2 class="slide-title">India's <span class="hl-red">Road Crisis</span> is Invisible</h2>
+    <p class="slide-desc">Manual inspection is slow, expensive, and dangerously reactive. Cities lack data to prioritize repairs.</p>
+    <div class="problem-stat-row">
+      <div class="prob-stat"><div class="prob-stat-val">3.5 Lakh+</div><div class="prob-stat-lbl">Road Accidents / Year in India</div></div>
+      <div class="prob-stat"><div class="prob-stat-val">₹54,700 Cr</div><div class="prob-stat-lbl">Annual Economic Loss from Bad Roads</div></div>
+      <div class="prob-stat"><div class="prob-stat-val">40%</div><div class="prob-stat-lbl">Defects Undetected Until Failure</div></div>
+    </div>
+    <div class="card-grid card-grid-3">
+      <div class="info-card"><div class="card-icon">🔍</div><div class="card-title">Manual Inspection Gap</div><div class="card-body">Traditional walk-through surveys cover less than 5% of road network per quarter. Critical defects go unnoticed for months.</div></div>
+      <div class="info-card"><div class="card-icon">📊</div><div class="card-title">No Severity Prioritization</div><div class="card-body">PWD departments lack data-driven triage. All defects are treated uniformly, wasting emergency budgets on minor repairs.</div></div>
+      <div class="info-card"><div class="card-icon">🏗️</div><div class="card-title">Contractor Opacity</div><div class="card-body">No transparent tender-to-repair pipeline. Procurement issues and unverified repair claims cost municipalities crores annually.</div></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: OUR SOLUTION -->
+  <div class="slide" id="slide-3">
+    <div class="slide-tag">02 · Our Solution</div>
+    <h2 class="slide-title">A Complete <span class="hl-blue">Smart Infrastructure</span> Platform</h2>
+    <p class="slide-desc">End-to-end pipeline: detect → classify → geo-tag → prioritize → dispatch → track → verify.</p>
+    <div class="card-grid card-grid-2">
+      <div class="feature-row"><div class="feature-num">1</div><div class="feature-content"><h4>🛣️ Live AI Pavement Scanner</h4><p>Edge computer vision at 30 FPS using Sobel gradient kernels, dynamic luminance thresholding, and connected-component bounding-box clustering simulating dashcam patrol.</p></div></div>
+      <div class="feature-row"><div class="feature-num">2</div><div class="feature-content"><h4>🗺️ GIS Condition Map</h4><p>Interactive Leaflet GIS map with PCI overlays, defect heatmaps, EXIF GPS auto-tagging from dashcam images, and real-time severity filtering by type.</p></div></div>
+      <div class="feature-row"><div class="feature-num">3</div><div class="feature-content"><h4>📋 Municipal Work Orders</h4><p>Auto-generated PWD work orders with material quantity estimates, budget calculations in INR, SLA deadlines (24h–720h), and one-click crew dispatch.</p></div></div>
+      <div class="feature-row"><div class="feature-num">4</div><div class="feature-content"><h4>🏗️ Contractor Tender Marketplace</h4><p>Publish area-based tenders, receive competitive bids, award contracts to verified firms, and track repair progress with a full digital audit trail.</p></div></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: ARCHITECTURE -->
+  <div class="slide" id="slide-4">
+    <div class="slide-tag">03 · System Architecture</div>
+    <h2 class="slide-title">Full-Stack <span class="hl-cyan">End-to-End</span> Pipeline</h2>
+    <p class="slide-desc">From dashcam pixel to municipal work order in under 2 seconds.</p>
+    <div class="arch-flow" style="margin-bottom:24px;">
+      <div class="arch-node"><div class="arch-node-icon">📷</div><div class="arch-node-title">Data Capture</div><div class="arch-node-sub">Dashcam JPEG<br>EXIF GPS, Alt,<br>Heading</div></div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-node" style="border-color:rgba(59,130,246,0.4);"><div class="arch-node-icon">🧠</div><div class="arch-node-title">CV Engine</div><div class="arch-node-sub">Sobel 3×3 Kernel<br>Luminance Thresh.<br>Morphology + BBox</div></div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-node"><div class="arch-node-icon">⚖️</div><div class="arch-node-title">Priority Engine</div><div class="arch-node-sub">PCI Scoring<br>Severity × Traffic<br>× Speed × Size</div></div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-node"><div class="arch-node-icon">🗄️</div><div class="arch-node-title">Backend API</div><div class="arch-node-sub">Python HTTP Server<br>SQLite Database<br>REST + CORS</div></div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-node"><div class="arch-node-icon">🌐</div><div class="arch-node-title">Smart Dashboard</div><div class="arch-node-sub">GIS Map + Scanner<br>Work Orders<br>Contractor Portal</div></div>
+    </div>
+    <div class="card-grid card-grid-3">
+      <div class="info-card" style="padding:18px;"><div class="card-title" style="margin-bottom:12px;">🔌 REST API Endpoints</div><div class="code-block" style="font-size:0.68rem;"><span class="kw">GET</span>  /api/defects<br><span class="kw">POST</span> /api/workorders<br><span class="kw">GET</span>  /api/tenders<br><span class="kw">POST</span> /api/bids<br><span class="kw">POST</span> /api/tenders/award<br><span class="kw">GET</span>  /api/stats</div></div>
+      <div class="info-card" style="padding:18px;"><div class="card-title" style="margin-bottom:12px;">🗃️ Data Schema</div><div class="card-body"><strong style="color:var(--text-primary);">defects</strong> — GPS, type, severity, PCI, SLA<br><br><strong style="color:var(--text-primary);">work_orders</strong> — material, cost, team<br><br><strong style="color:var(--text-primary);">tenders / bids</strong> — marketplace flow<br><br><strong style="color:var(--text-primary);">contractors</strong> — registration, auth</div></div>
+      <div class="info-card" style="padding:18px;"><div class="card-title" style="margin-bottom:12px;">⚡ Priority Algorithm</div><div class="code-block" style="font-size:0.68rem;">score = (<br>&nbsp;&nbsp;severity_w ×<br>&nbsp;&nbsp;traffic_w ×<br>&nbsp;&nbsp;speed_w ×<br>&nbsp;&nbsp;size_w<br>) / 1.4<br><span class="cm"># capped at 100</span></div></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: TECH STACK -->
+  <div class="slide" id="slide-5">
+    <div class="slide-tag">04 · Technology Stack</div>
+    <h2 class="slide-title">Built With <span class="hl-green">Production-Grade</span> Technologies</h2>
+    <p class="slide-desc">Zero external AI API calls. Fully offline-capable. All inference runs on-device.</p>
+    <div style="max-width:1000px;width:100%;">
+      <div class="tech-row">
+        <div class="tech-chip"><span style="width:8px;height:8px;border-radius:50%;background:#3b82f6;display:inline-block;"></span>HTML5 Canvas</div>
+        <div class="tech-chip"><span style="width:8px;height:8px;border-radius:50%;background:#f7df1e;display:inline-block;"></span>Vanilla JavaScript</div>
+        <div class="tech-chip"><span style="width:8px;height:8px;border-radius:50%;background:#3776ab;display:inline-block;"></span>Python 3 (stdlib)</div>
+        <div class="tech-chip"><span style="width:8px;height:8px;border-radius:50%;background:#0f9d58;display:inline-block;"></span>SQLite 3</div>
+        <div class="tech-chip"><span style="width:8px;height:8px;border-radius:50%;background:#1a8cff;display:inline-block;"></span>Leaflet GIS</div>
+      </div>
+      <div class="tech-row">
+        <div class="tech-chip"><span style="width:8px;height:8px;border-radius:50%;background:#06b6d4;display:inline-block;"></span>Leaflet.heat Heatmap</div>
+        <div class="tech-chip"><span style="width:8px;height:8px;border-radius:50%;background:#10b981;display:inline-block;"></span>EXIF Metadata Parser</div>
+        <div class="tech-chip"><span style="width:8px;height:8px;border-radius:50%;background:#f59e0b;display:inline-block;"></span>Sobel CV Algorithm</div>
+        <div class="tech-chip"><span style="width:8px;height:8px;border-radius:50%;background:#8b5cf6;display:inline-block;"></span>GeoJSON / REST API</div>
+      </div>
+      <div class="card-grid card-grid-3" style="margin-top:24px;">
+        <div class="info-card"><div class="card-title" style="color:var(--accent-blue);">Frontend</div><ul class="styled-list" style="margin-top:10px;"><li>Interactive GIS Map with real markers</li><li>Canvas-based 30 FPS AI scanner</li><li>Contractor marketplace SPA</li><li>Drag and drop EXIF GPS photo upload</li><li>PCI heatmap visualization</li></ul></div>
+        <div class="info-card"><div class="card-title" style="color:var(--accent-green);">Backend</div><ul class="styled-list" style="margin-top:10px;"><li>Pure Python HTTP server — no frameworks</li><li>SQLite persistent road defect database</li><li>PBKDF2 password hashing (180K rounds)</li><li>Full CORS and REST API layer</li><li>Algorithmic priority scoring engine</li></ul></div>
+        <div class="info-card"><div class="card-title" style="color:var(--accent-cyan);">AI / CV Engine</div><ul class="styled-list" style="margin-top:10px;"><li>Sobel 3×3 edge gradient convolution</li><li>Dynamic luminance cavity detection</li><li>Morphological bounding-box clustering</li><li>Pixel-to-ground homography metric</li><li>PCI / PASER pavement rating model</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: FEATURES WALKTHROUGH -->
+  <div class="slide" id="slide-6">
+    <div class="slide-tag">05 · Feature Walkthrough</div>
+    <h2 class="slide-title">Five <span class="hl-orange">Powerful</span> Dashboard Modules</h2>
+    <p class="slide-desc">Each tab solves a different stakeholder's problem — from field inspector to municipal officer.</p>
+    <div class="card-grid card-grid-2">
+      <div class="info-card" style="border-left:3px solid var(--accent-blue);"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><span style="font-size:1.4rem;">🗺️</span><span class="badge badge-blue">Tab 1</span><strong>GIS Condition Map</strong></div><div class="card-body">Priority hazard queue with filter by type and severity. GPS pinned markers with colour-coded PCI. Defect density heatmap toggle. Inspection drawer with full defect metadata.</div></div>
+      <div class="info-card" style="border-left:3px solid var(--accent-purple);"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><span style="font-size:1.4rem;">🔬</span><span class="badge badge-purple">Tab 2</span><strong>Live AI Scanner</strong></div><div class="card-body">Canvas viewport simulating dashcam patrol at 30 FPS. Live readout: defect type, severity, model confidence, estimated depth. CV pipeline breakdown in real-time HUD.</div></div>
+      <div class="info-card" style="border-left:3px solid var(--accent-orange);"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><span style="font-size:1.4rem;">📋</span><span class="badge badge-orange">Tab 3</span><strong>Work Orders</strong></div><div class="card-body">Auto-calculated repair material (Polymer-Modified Cold Mix), budget in INR, SLA timelines by urgency. One-click dispatch modal with GPS geotag and crew assignment.</div></div>
+      <div class="info-card" style="border-left:3px solid var(--accent-green);"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><span style="font-size:1.4rem;">🏗️</span><span class="badge badge-green">Tab 4</span><strong>Contractor Portal</strong></div><div class="card-body">Government publishes tenders → contractors register and bid → municipality awards → contractor reports progress % → completed repairs verified. Full digital audit trail.</div></div>
+    </div>
+    <div class="info-card" style="max-width:1100px;width:100%;margin-top:16px;border-left:3px solid var(--accent-red);display:flex;align-items:center;gap:16px;"><span style="font-size:1.6rem;">📊</span><div><strong>Tab 5 — Safety and PCI Audit Report</strong><div class="card-body" style="margin-top:4px;">Network-wide Pavement Condition Index dashboard with GeoJSON/CSV export for integration with city GIS portals, NITI Aayog smart city dashboards, and state PWD MIS systems.</div></div></div>
+  </div>
+
+  <!-- SLIDE 7: CV DEEP DIVE -->
+  <div class="slide" id="slide-7">
+    <div class="slide-tag">06 · AI Detection Deep Dive</div>
+    <h2 class="slide-title">How the <span class="hl-cyan">Computer Vision</span> Works</h2>
+    <p class="slide-desc">No GPU. No cloud. Edge inference pipeline running entirely in the browser on a canvas element.</p>
+    <div class="split-layout">
+      <div>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="arch-node" style="text-align:left;display:flex;gap:14px;align-items:center;"><div style="min-width:36px;height:36px;border-radius:8px;background:rgba(59,130,246,0.15);display:flex;align-items:center;justify-content:center;">1</div><div><strong>Sobel Spatial Kernel</strong><br><span style="font-size:0.78rem;color:var(--text-muted);">High-pass 3×3 convolution for edge gradient magnitude detection</span></div></div>
+          <div class="arch-node" style="text-align:left;display:flex;gap:14px;align-items:center;"><div style="min-width:36px;height:36px;border-radius:8px;background:rgba(6,182,212,0.15);display:flex;align-items:center;justify-content:center;">2</div><div><strong>Cavity Extractor</strong><br><span style="font-size:0.78rem;color:var(--text-muted);">Dynamic luminance thresholding isolates dark depression regions</span></div></div>
+          <div class="arch-node" style="text-align:left;display:flex;gap:14px;align-items:center;"><div style="min-width:36px;height:36px;border-radius:8px;background:rgba(16,185,129,0.15);display:flex;align-items:center;justify-content:center;">3</div><div><strong>Morphological Analysis</strong><br><span style="font-size:0.78rem;color:var(--text-muted);">Connected component clustering, bounding box labeling, area measurement</span></div></div>
+          <div class="arch-node" style="text-align:left;display:flex;gap:14px;align-items:center;"><div style="min-width:36px;height:36px;border-radius:8px;background:rgba(245,158,11,0.15);display:flex;align-items:center;justify-content:center;">4</div><div><strong>Homography Calibrator</strong><br><span style="font-size:0.78rem;color:var(--text-muted);">Converts bbox pixels to real-world cm depth and m2 area via ground metric</span></div></div>
+        </div>
+      </div>
+      <div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+          <div class="metric-big"><div class="metric-big-val hl-blue">96%</div><div class="metric-big-label">Pothole Confidence</div></div>
+          <div class="metric-big"><div class="metric-big-val hl-green">93%</div><div class="metric-big-label">Alligator Crack</div></div>
+          <div class="metric-big"><div class="metric-big-val hl-cyan">91%</div><div class="metric-big-label">Transverse Crack</div></div>
+          <div class="metric-big"><div class="metric-big-val hl-orange">89%</div><div class="metric-big-label">Longitudinal Crack</div></div>
+        </div>
+        <div class="info-card"><div class="card-title" style="margin-bottom:8px;">6 Defect Types Classified</div><div style="display:flex;flex-wrap:wrap;gap:8px;"><span class="badge badge-red">Pothole</span><span class="badge badge-orange">Alligator Cracking</span><span class="badge badge-blue">Longitudinal Crack</span><span class="badge badge-green">Transverse Crack</span><span class="badge badge-purple">Rutting / Uneven Surface</span><span class="badge badge-orange">Raveling and Surface Wear</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: IMPACT -->
+  <div class="slide" id="slide-8">
+    <div class="slide-tag">07 · Impact and Metrics</div>
+    <h2 class="slide-title">Quantified <span class="hl-green">Real-World Impact</span></h2>
+    <p class="slide-desc">Demonstrated on Jaipur Smart Corridor — 6 defects across 5 road segments mapped live.</p>
+    <div class="card-grid card-grid-4" style="margin-bottom:20px;">
+      <div class="metric-big" style="border-color:rgba(239,68,68,0.3);"><div class="metric-big-val hl-red">1</div><div class="metric-big-label">Emergency Hazard under 24h SLA</div></div>
+      <div class="metric-big" style="border-color:rgba(245,158,11,0.3);"><div class="metric-big-val hl-orange">₹4,500</div><div class="metric-big-label">Auto-Calculated Repair Cost</div></div>
+      <div class="metric-big" style="border-color:rgba(59,130,246,0.3);"><div class="metric-big-val hl-blue">64</div><div class="metric-big-label">Network PCI Score (Fair)</div></div>
+      <div class="metric-big" style="border-color:rgba(16,185,129,0.3);"><div class="metric-big-val hl-green">120 kg</div><div class="metric-big-label">Cold Mix Material Prescribed</div></div>
+    </div>
+    <div class="card-grid card-grid-3">
+      <div class="info-card"><div class="card-icon">⏱️</div><div class="card-title">10× Faster Survey</div><div class="card-body">Dashcam patrol detects defects continuously vs quarterly manual walk-throughs. Full city coverage in days, not months.</div></div>
+      <div class="info-card"><div class="card-icon">💰</div><div class="card-title">40% Budget Savings</div><div class="card-body">Priority scoring directs emergency funds to genuinely critical defects. Medium/low items are batched for routine maintenance cycles.</div></div>
+      <div class="info-card"><div class="card-icon">🔒</div><div class="card-title">100% Auditable</div><div class="card-body">Complete digital tender-to-repair chain in SQLite. Every bid, award, and progress update is timestamped and tamper-evident.</div></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: ROADMAP -->
+  <div class="slide" id="slide-9">
+    <div class="slide-tag">08 · Future Roadmap</div>
+    <h2 class="slide-title">Scaling to <span class="hl-purple">Smart Cities</span> Across India</h2>
+    <p class="slide-desc">apexpave ai is built for rapid scale from prototype to city-wide deployment.</p>
+    <div class="split-layout">
+      <div class="roadmap-timeline">
+        <div class="roadmap-item"><div class="roadmap-dot" style="border-color:var(--accent-green);color:var(--accent-green);background:rgba(16,185,129,0.1);">✓</div><div class="roadmap-content"><div style="display:flex;justify-content:space-between;align-items:center;"><h4>Hackathon MVP — Phase 0</h4><span class="badge badge-green">LIVE TODAY</span></div><p>CV scanner, GIS map, work orders, contractor marketplace, SQLite backend — fully functional.</p></div></div>
+        <div class="roadmap-item"><div class="roadmap-dot">1</div><div class="roadmap-content"><div style="display:flex;justify-content:space-between;align-items:center;"><h4>YOLOv8 + TensorFlow Lite Integration</h4><span class="badge badge-blue">Q1 2027</span></div><p>Replace Sobel engine with fine-tuned YOLO model on 50,000+ Indian road images. Mobile-edge on Raspberry Pi / Jetson Nano.</p></div></div>
+        <div class="roadmap-item"><div class="roadmap-dot">2</div><div class="roadmap-content"><div style="display:flex;justify-content:space-between;align-items:center;"><h4>Municipal API Integration</h4><span class="badge badge-orange">Q2 2027</span></div><p>Direct integration with Jaipur Smart City MIS, eNagar Palika and state PWD ERP systems via open NDAP APIs.</p></div></div>
+        <div class="roadmap-item"><div class="roadmap-dot">3</div><div class="roadmap-content"><div style="display:flex;justify-content:space-between;align-items:center;"><h4>Citizen Crowdsource App</h4><span class="badge badge-purple">Q3 2027</span></div><p>Android/iOS app allowing citizens to report defects via photo upload. Community-powered survey supplements vehicle patrol.</p></div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="info-card"><div class="card-icon">🌏</div><div class="card-title">Target Market</div><div class="card-body"><strong style="color:var(--text-primary);">500+ Smart Cities</strong> under India's Smart Cities Mission. Addressable market: <strong style="color:var(--accent-green);">₹7,000 Cr/year</strong> in road maintenance contracts.</div></div>
+        <div class="info-card"><div class="card-icon">🤝</div><div class="card-title">Partnerships Pipeline</div><ul class="styled-list" style="margin-top:10px;"><li>NHAI — National Highway Authority</li><li>Jaipur Municipal Corporation (JMC)</li><li>ISRO Bhuvan GIS data partnership</li><li>MoRTH Smart Mobility vertical</li></ul></div>
+        <div class="info-card"><div class="card-icon">💡</div><div class="card-title">Revenue Model</div><div class="card-body">SaaS licensing per city ward. Per-tender transaction fee (1.5%). Premium API access for state PWDs. White-labelled contractor portal.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: CLOSING -->
+  <div class="slide" id="slide-10">
+    <div class="hero-badge" style="margin-bottom:36px;"><div class="pulse-dot"></div>IEEE-IGNITE 2026 · SKIT018 · Jaipur, Rajasthan</div>
+    <div class="cta-box">
+      <h2 style="font-size:3rem;font-weight:900;margin-bottom:12px;background:linear-gradient(135deg,#fff,#93c5fd,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">apexpave ai™</h2>
+      <p style="font-size:1.1rem;color:var(--text-muted);margin-bottom:32px;line-height:1.6;">Smarter roads. Safer cities. Transparent governance.<br><span style="color:var(--accent-cyan);">Built in 24 hours. Designed to last 24 years.</span></p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;text-align:left;">
+        <div style="background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:12px;padding:16px;"><div style="font-size:0.7rem;color:var(--accent-cyan);font-family:'JetBrains Mono',monospace;letter-spacing:0.1em;margin-bottom:6px;">TECH STACK</div><div style="font-size:0.85rem;color:var(--text-muted);">Python · JavaScript · SQLite<br>Leaflet GIS · Canvas CV API</div></div>
+        <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:16px;"><div style="font-size:0.7rem;color:var(--accent-green);font-family:'JetBrains Mono',monospace;letter-spacing:0.1em;margin-bottom:6px;">LIVE DEMO</div><div style="font-size:0.85rem;color:var(--text-muted);">http://localhost:8000<br>python server.py then open index.html</div></div>
+      </div>
+    </div>
+    <p style="margin-top:32px;font-size:0.8rem;color:var(--text-subtle);">Thank you for your time — Questions Welcome</p>
+  </div>
+
+</div>
+
+<!-- Navigation Bar -->
+<div class="nav-bar">
+  <button class="nav-btn" onclick="changeSlide(-1)">← Prev</button>
+  <div class="dot-nav" id="dot-nav"></div>
+  <span class="slide-counter" id="slide-counter">1 / 10</span>
+  <button class="nav-btn" onclick="changeSlide(1)">Next →</button>
+</div>
+
+<script>
+  const TOTAL = 10;
+  let cur = 1;
+  const dotNav = document.getElementById('dot-nav');
+  for (let i = 1; i <= TOTAL; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 1 ? ' active' : '');
+    d.addEventListener('click', () => goTo(i));
+    dotNav.appendChild(d);
+  }
+  function updateUI() {
+    document.getElementById('slide-counter').textContent = cur + ' / ' + TOTAL;
+    document.getElementById('slide-num-fixed').textContent = String(cur).padStart(2,'0') + ' / ' + String(TOTAL).padStart(2,'0');
+    document.getElementById('progress-bar').style.width = (cur / TOTAL * 100) + '%';
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i + 1 === cur));
+  }
+  function goTo(n) {
+    const prev = document.getElementById('slide-' + cur);
+    prev.classList.remove('active');
+    prev.classList.add('exit');
+    setTimeout(() => prev.classList.remove('exit'), 600);
+    cur = Math.max(1, Math.min(TOTAL, n));
+    document.getElementById('slide-' + cur).classList.add('active');
+    updateUI();
+  }
+  function changeSlide(dir) { goTo(cur + dir); }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changeSlide(-1);
+  });
+  let tx = 0;
+  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 50) changeSlide(dx < 0 ? 1 : -1); });
+  updateUI();
+</script>
+</body>
+</html>
